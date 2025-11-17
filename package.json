@@ -1,0 +1,13 @@
+{
+  "name": "whiteboard",
+  "version": "1.0.0",
+  "description": "Rock Paper Scissors Game",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "MULT-213 Class",
+  "license": "ISC",
+  "dependencies": {}
+}
