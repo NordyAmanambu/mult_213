@@ -1,0 +1,16 @@
+{
+  "name": "webpage_app",
+  "author": "Jesse Rolheiser",
+  "version": "1.0.0",
+  "description": "Weather App",
+  "main": "index.js",
+  "scripts": {
+    "build": "esbuild src/app.js --bundle --outfile=dist/main.js",
+    "watch": "esbuild src/app.js --bundle --outfile=dist/main.js --watch"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "esbuild": "0.27.0"
+  },
+  "license": "ISC"
+}

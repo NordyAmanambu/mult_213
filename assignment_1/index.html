@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Weather Dashboard</title>
+
+    <link rel="stylesheet" href="style.css" />
+
+</head>
+
+<body>
+    <main class="container">
+        <h1>testing</h1>
+
+        <form id="city-form">
+            <fieldset>
+                <legend>Search by City Name</legend>
+                <input id="city" placeholder="Enter a city" required />
+                <button>Search City</button>
+            </fieldset>
+        </form>
+
+        <section id="city-list" class="card">
+            <p>Awaiting input…</p>
+        </section>
+
+        <form id="weather-form">
+            <fieldset>
+                <legend>Search by Coordinates</legend>
+
+                <label for="lat">Latitude</label>
+                <input id="lat" name="lat" type="number" step="any" min="-90" max="90" placeholder="e.g. 34.05" required />
+
+                <label for="lon">Longitude</label>
+                <input id="lon" name="lon" type="number" step="any" min="-180" max="180" placeholder="e.g. -118.24" required />
+
+                <button type="submit">Search Weather</button>
+            </fieldset>
+        </form>
+
+        <section id="weather-output" class="card">
+            <p>Awaiting input…</p>
+        </section>
+    </main>
+
+    <!-- Your bundled JS file -->
+    <script src="dist/main.js"></script>
+</body>
+
+</html>
