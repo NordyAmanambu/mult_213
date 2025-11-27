@@ -1,16 +1,26 @@
 {
-  "name": "webpage_app",
-  "author": "Jesse Rolheiser",
+  "name": "event-finder-ticketmaster",
+  "author": "Nordy Amanambu",
   "version": "1.0.0",
-  "description": "Weather App",
-  "main": "index.js",
+  "description": "Event search application using Ticketmaster Discovery API",
+  "main": "src/app.js",
   "scripts": {
-    "build": "esbuild src/app.js --bundle --outfile=dist/main.js",
-    "watch": "esbuild src/app.js --bundle --outfile=dist/main.js --watch"
+    "start": "npx http-server -p 8000 -o",
+    "dev": "npx http-server -p 8000",
+    "validate-html": "npx html-validate index.html",
+    "validate-css": "npx stylelint style.css"
   },
+  "keywords": [
+    "ticketmaster",
+    "events",
+    "api",
+    "javascript",
+    "async",
+    "es6"
+  ],
   "dependencies": {},
   "devDependencies": {
     "esbuild": "0.27.0"
   },
-  "license": "ISC"
+  "license": "MIT"
 }
