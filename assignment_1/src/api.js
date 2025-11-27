@@ -11,7 +11,11 @@
   // const temp = await response.json();
   // console.log("arlin - SEARCH CITY 4 ------------------------------------------------");
   // console.log(temp);
-
+// code from class
+  // const response = await fetch(`https://app.ticketmaster.com/discovery/v2/events.json?apikey=${api_key}`);
+  
+  // const temp = await response.json();
+  // console.log("");
 
   // jesse code below
 //   const res = await fetch(
@@ -49,8 +53,13 @@ const VENUES_API_URL = 'https://app.ticketmaster.com/discovery/v2/venues.json';
 //  * @returns {Promise<Array>} A promise that resolves with an array of event objects, or null if none are found.
 //  * @throws {Error} Throws an error if the API request fails.
 //  */
-// code from class
-  // const response = await fetch(`https://app.ticketmaster.com/discovery/v2/events.json?apikey=${api_key}`);
-  
-  // const temp = await response.json();
-  // console.log("");
+
+export const fetchEvents = async (city) => {
+    // Construct the API URL for events search
+    const url = new URL(EVENTS_API_URL);
+    url.searchParams.append('apikey', API_KEY);
+    url.searchParams.append('city', city);
+    url.searchParams.append('sort', 'date,asc'); 
+    url.searchParams.append('countryCode', 'US'); // Scope to US for easier testing
+    
+
