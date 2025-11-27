@@ -2,6 +2,26 @@
 // Reference: https://open-meteo.com/
 
 export async function searchCity(city) {
+  // testing with arlin
+  // 4.6 https:/ / online.saskpolytech.ca / d2l / le / content / 439129 / viewContent / 17138750 / View
+  // console.log("arlin - SEARCH CITY 1 ------------------------------------------------");
+  // console.log("arlin - SEARCH CITY 2 ------------------------------------------------");
+  // const response = await fetch('https://app.ticketmaster.com/discovery/v2/events.json?apikey=7tlmGglNfRI6ZzZmwvMa0PV1KOYaMOTI');
+  // console.log("arlin - SEARCH CITY 3 ------------------------------------------------");
+  // const temp = await response.json();
+  // console.log("arlin - SEARCH CITY 4 ------------------------------------------------");
+  // console.log(temp);
+
+  console.log("arlin - SEARCH CITY 1 ------------------------------------------------");
+  const api_key = '7tlmGglNfRI6ZzZmwvMa0PV1KOYaMOTI';
+  console.log("arlin - SEARCH CITY 2 ------------------------------------------------");
+  const response = await fetch(`https://app.ticketmaster.com/discovery/v2/events.json?apikey=${api_key}`);
+  console.log("arlin - SEARCH CITY 3 ------------------------------------------------");
+  const temp = await response.json();
+  console.log("arlin - SEARCH CITY 4 ------------------------------------------------");
+  console.log(temp);
+
+  // jesse code below
   const res = await fetch(
     `https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=10&language=en&format=json`
   );
