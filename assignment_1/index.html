@@ -1,53 +1,99 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <title>Weather Dashboard</title>
-
-    <link rel="stylesheet" href="style.css" />
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Find upcoming events in your city using Ticketmaster API">
+    <title>Event Finder - Ticketmaster Events Search</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    <main class="container">
-        <h1>testing</h1>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">🎫 Event Finder</h1>
+            <p class="tagline">Discover upcoming events in your city</p>
+        </div>
+    </header>
 
-        <form id="city-form">
-            <fieldset>
-                <legend>Search by City Name</legend>
-                <input id="city" placeholder="Enter a city" required />
-                <button>Search City</button>
-            </fieldset>
-        </form>
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Search Section -->
+            <section class="search-section">
+                <form id="searchForm" class="search-form">
+                    <div class="form-group">
+                        <label for="cityInput">City Name</label>
+                        <input 
+                            type="text" 
+                            id="cityInput" 
+                            placeholder="Enter city name (e.g., Toronto, Vancouver)" 
+                            required
+                            aria-label="City name input"
+                        >
+                    </div>
 
-        <section id="city-list" class="card">
-            <p>Awaiting input…</p>
-        </section>
+                    <div class="form-group">
+                        <label for="categorySelect">Event Category</label>
+                        <select id="categorySelect" aria-label="Event category selection">
+                            <option value="">All Categories</option>
+                            <option value="Music">Music</option>
+                            <option value="Sports">Sports</option>
+                            <option value="Arts & Theatre">Arts & Theatre</option>
+                            <option value="Family">Family</option>
+                            <option value="Film">Film</option>
+                        </select>
+                    </div>
 
-        <form id="weather-form">
-            <fieldset>
-                <legend>Search by Coordinates</legend>
+                    <button type="submit" class="btn-search" aria-label="Search for events">
+                        Search Events
+                    </button>
+                </form>
+            </section>
 
-                <label for="lat">Latitude</label>
-                <input id="lat" name="lat" type="number" step="any" min="-90" max="90" placeholder="e.g. 34.05" required />
+            <!-- Loading Indicator -->
+            <div id="loadingIndicator" class="loading hidden" aria-live="polite">
+                <div class="spinner"></div>
+                <p>Searching for events...</p>
+            </div>
 
-                <label for="lon">Longitude</label>
-                <input id="lon" name="lon" type="number" step="any" min="-180" max="180" placeholder="e.g. -118.24" required />
+            <!-- Error Message -->
+            <div id="errorMessage" class="error-message hidden" role="alert" aria-live="assertive">
+                <p class="error-text"></p>
+            </div>
 
-                <button type="submit">Search Weather</button>
-            </fieldset>
-        </form>
+            <!-- Results Section -->
+            <section class="results-section">
+                <div id="resultsHeader" class="results-header hidden">
+                    <h2 id="resultsTitle">Events Found</h2>
+                    <p id="resultsCount" class="results-count"></p>
+                </div>
 
-        <section id="weather-output" class="card">
-            <p>Awaiting input…</p>
-        </section>
+                <div id="eventsGrid" class="events-grid" role="region" aria-label="Events list">
+                    <!-- Events will be dynamically inserted here -->
+                </div>
+            </section>
+
+            <!-- Event Detail Modal -->
+            <div id="eventModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+                <div class="modal-content">
+                    <button class="modal-close" aria-label="Close modal">&times;</button>
+                    <div id="modalBody" class="modal-body">
+                        <!-- Event details will be dynamically inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
-    <!-- Your bundled JS file -->
-    <script src="dist/main.js"></script>
-</body>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Event Finder | Powered by <a href="https://developer.ticketmaster.com/" target="_blank" rel="noopener">Ticketmaster API</a></p>
+        </div>
+    </footer>
 
+    <!-- JavaScript Modules -->
+    <script type="module" src="src/app.js"></script>
+</body>
 </html>
