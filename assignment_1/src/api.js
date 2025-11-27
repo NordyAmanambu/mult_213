@@ -12,11 +12,11 @@ export async function searchCity(city) {
   // console.log("arlin - SEARCH CITY 4 ------------------------------------------------");
   // console.log(temp);
 
-  console.log("arlin - SEARCH CITY 1 ------------------------------------------------");
+// getting the data from the API
   const api_key = '7tlmGglNfRI6ZzZmwvMa0PV1KOYaMOTI';
-  console.log("arlin - SEARCH CITY 2 ------------------------------------------------");
+  
   const response = await fetch(`https://app.ticketmaster.com/discovery/v2/events.json?apikey=${api_key}`);
-  console.log("arlin - SEARCH CITY 3 ------------------------------------------------");
+  
   const temp = await response.json();
   console.log("arlin - SEARCH CITY 4 ------------------------------------------------");
   console.log(temp);
