@@ -1,65 +1,131 @@
-import { renderMessage } from "./dom.js";
-import { searchCity, fetchWeather } from "./api.js";
+/**
+ * Main Application Entry Point
+ */
 
-// Grab references to various parts of the HTML page
-const cityForm = document.querySelector("#city-form");
-const cityList = document.querySelector("#city-list");
-const weatherForm = document.querySelector("#weather-form");
-const weatherOutput = document.querySelector("#weather-output");
+import { fetchEventsByCity, fetchEventById } from './api.js';
+import { showLoading, hideLoading, showError, renderEvents, showEventModal, initModalListeners } from './dom.js';
 
-cityForm.addEventListener("submit", async (e) => {
+// Store fetched events for reference
+let currentEvents = [];
+
+/**
+ * Handle form submission
+ * @param {Event} e - Form submit event
+ */
+const handleSearch = async (e) => {
     e.preventDefault();
 
-    const city = document.querySelector("#city").value.trim();
-    if (!city) return;
+    // Get form values
+    const cityInput = document.getElementById('cityInput');
+    const categorySelect = document.getElementById('categorySelect');
+    
+    const city = cityInput.value.trim();
+    const category = categorySelect.value;
 
-    renderMessage(cityList, "Loading…");
+    // Validation
+    if (!city) {
+        showError('Please enter a city name');
+        return;
+    }
+
+    // Show loading state
+    showLoading();
 
     try {
-        const data = await searchCity(city);
-        if (data.length === 0) {
-            renderMessage(cityList, `No results found for "${city}".`);
-            return;
+        // Fetch events
+        const result = await fetchEventsByCity(city, category);
+        
+        // Store events
+        currentEvents = result.events;
+
+        // Render events
+        renderEvents(result.events, city);
+
+        console.log(`Successfully loaded ${result.events.length} events`);
+
+    } catch (error) {
+        console.error('Search error:', error);
+        
+        // Show user-friendly error message
+        let errorMessage = 'Unable to load events. ';
+        
+        if (error.message.includes('No events found')) {
+            errorMessage = `No events found in ${city}. Try another city or category.`;
+        } else if (error.message.includes('timeout')) {
+            errorMessage = 'Request timed out. Please check your connection and try again.';
+        } else if (error.message.includes('HTTP Error')) {
+            errorMessage = 'Server error. Please try again later.';
+        } else {
+            errorMessage += error.message || 'Please try again.';
         }
 
-        let message = `Found ${data.length} result(s) for "${city}":`;
-
-        message += "<ul>";
-        data.forEach((item) => {
-            message += `<li>${item.name}, ${item.country} (Lat: ${item.latitude}, Lon: ${item.longitude})</li>`;
-        });
-        message += "</ul>";
-
-        renderMessage(cityList, message);
-    } catch (err) {
-        renderMessage(cityList, `Error: ${err.message}`);
+        showError(errorMessage);
+    } finally {
+        hideLoading();
     }
-});
+};
 
-weatherForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+/**
+ * Handle showing event details
+ * @param {CustomEvent} e - Custom event with eventId
+ */
+const handleShowEventDetails = async (e) => {
+    const { eventId } = e.detail;
 
-    const latStr = document.querySelector("#lat").value.trim();
-    const lonStr = document.querySelector("#lon").value.trim();
+    // Find event in current events
+    const event = currentEvents.find(evt => evt.id === eventId);
 
-    if (!latStr || !lonStr) {
-        renderMessage(weatherOutput, "Please provide both latitude and longitude.");
-        return;
+    if (event) {
+        // Show modal with existing data
+        showEventModal(event);
+    } else {
+        // Fetch event details if not found (fallback)
+        try {
+            const result = await fetchEventById(eventId);
+            showEventModal(result.event);
+        } catch (error) {
+            console.error('Error loading event details:', error);
+            showError('Unable to load event details');
+        }
+    }
+};
+
+/**
+ * Initialize application
+ */
+const init = () => {
+    console.log('Initializing Event Finder app...');
+
+    // Get form element
+    const searchForm = document.getElementById('searchForm');
+
+    // Add form submit listener
+    if (searchForm) {
+        searchForm.addEventListener('submit', handleSearch);
+        console.log('Search form listener attached');
+    } else {
+        console.error('Search form not found!');
     }
 
-    const lat = parseFloat(latStr);
-    const lon = parseFloat(lonStr);
-    if (Number.isNaN(lat) || Number.isNaN(lon)) {
-        renderMessage(weatherOutput, "Latitude and longitude must be valid numbers.");
-        return;
-    }
+    // Initialize modal listeners
+    initModalListeners();
 
-    renderMessage(weatherOutput, "Loading Weather Data…");
+    // Listen for custom event to show details
+    document.addEventListener('showEventDetails', handleShowEventDetails);
 
-    try {
-        const weather = await fetchWeather(lat, lon);
-        renderMessage(weatherOutput, `<pre>${JSON.stringify(weather, null, 2)}</pre>`);
-    } catch (err) {
-        renderMessage(weatherOutput, `Error: ${err.message}`);
-    }
-});
+    // Add example cities for user convenience
+    const cityInput = document.getElementById('cityInput');
+    cityInput?.setAttribute('placeholder', 'e.g., Toronto, Vancouver, Montreal, Saskatoon');
+
+    console.log('Event Finder app initialized successfully!');
+};
+
+// Initialize app when DOM is fully loaded
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
+
+// Export for testing (optional)
+export { handleSearch, handleShowEventDetails };
