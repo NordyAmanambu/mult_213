@@ -1,65 +1,81 @@
-// API function to integrate with Open-Meteo Geocoding and Weather APIs
-// Reference: https://open-meteo.com/
+// API Configuration
+const API_KEY = '7tlmGglNfRI6ZzZmwvMa0PV1KOYaMOTI';
+const BASE_URL = 'https://app.ticketmaster.com/discovery/v2';
 
-// export async function searchCity(city) {
-  // testing with arlin
-  // 4.6 https:/ / online.saskpolytech.ca / d2l / le / content / 439129 / viewContent / 17138750 / View
-  // console.log("arlin - SEARCH CITY 1 ------------------------------------------------");
-  // console.log("arlin - SEARCH CITY 2 ------------------------------------------------");
-  // const response = await fetch('https://app.ticketmaster.com/discovery/v2/events.json?apikey=7tlmGglNfRI6ZzZmwvMa0PV1KOYaMOTI');
-  // console.log("arlin - SEARCH CITY 3 ------------------------------------------------");
-  // const temp = await response.json();
-  // console.log("arlin - SEARCH CITY 4 ------------------------------------------------");
-  // console.log(temp);
-// code from class
-  // const response = await fetch(`https://app.ticketmaster.com/discovery/v2/events.json?apikey=${api_key}`);
-  
-  // const temp = await response.json();
-  // console.log("");
+/**
+ * Fetch events by city and category
+ */
+export const fetchEventsByCity = async (city, category = '') => {
+    try {
+        let url = `${BASE_URL}/events.json?apikey=${API_KEY}&city=${encodeURIComponent(city)}&size=20`;
+        
+        if (category) {
+            url += `&classificationName=${encodeURIComponent(category)}`;
+        }
 
-  // jesse code below
-//   const res = await fetch(
-//     `https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=10&language=en&format=json`
-//   );
+        console.log('Fetching events from:', url);
 
-//   const data = await res.json();
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-//   console.log(data);
+        const response = await fetch(url, {
+            signal: controller.signal
+        });
 
-//   return data.results || [];
-// }
+        clearTimeout(timeoutId);
 
-// export async function fetchWeather(lat, lon) {
-//   // Hardcode coordinates or use a simple free API.
-//   const res = await fetch(
-//     `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`
-//   );
+        if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status} - ${response.statusText}`);
+        }
 
-//   const data = await res.json();
+        const data = await response.json();
 
-//   console.log(data);
+        if (!data._embedded || !data._embedded.events) {
+            throw new Error('No events found for this search criteria');
+        }
 
-//   return data.current_weather ?? "N/A";
-// }
+        return {
+            success: true,
+            events: data._embedded.events,
+            page: data.page,
+            totalEvents: data.page.totalElements
+        };
 
-// getting the data from the API
-  const api_key = '7tlmGglNfRI6ZzZmwvMa0PV1KOYaMOTI';
-  const EVENTS_API_URL = 'https://app.ticketmaster.com/discovery/v2/events.json';
-const VENUES_API_URL = 'https://app.ticketmaster.com/discovery/v2/venues.json';
+    } catch (error) {
+        console.error('Error fetching events:', error);
 
-//   /**
-//  * Fetches events from the Ticketmaster API based on city name. (Endpoint 1)
-//  * @param {string} city - The city tos search for events in.
-//  * @returns {Promise<Array>} A promise that resolves with an array of event objects, or null if none are found.
-//  * @throws {Error} Throws an error if the API request fails.
-//  */
+        if (error.name === 'AbortError') {
+            throw new Error('Request timeout - please try again');
+        }
 
-export const fetchEvents = async (city) => {
-    // Construct the API URL for events search
-    const url = new URL(EVENTS_API_URL);
-    url.searchParams.append('apikey', API_KEY);
-    url.searchParams.append('city', city);
-    url.searchParams.append('sort', 'date,asc'); 
-    url.searchParams.append('countryCode', 'US'); // Scope to US for easier testing
-    
+        throw error;
+    }
+};
 
+/**
+ * Fetch single event details by ID
+ */
+export const fetchEventById = async (eventId) => {
+    try {
+        const url = `${BASE_URL}/events/${eventId}.json?apikey=${API_KEY}`;
+
+        console.log('Fetching event details from:', url);
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status} - ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        return {
+            success: true,
+            event: data
+        };
+
+    } catch (error) {
+        console.error('Error fetching event details:', error);
+        throw error;
+    }
+};
