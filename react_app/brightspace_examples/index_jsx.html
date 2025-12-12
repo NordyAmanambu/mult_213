@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Add React to a Website</title>
+    <!-- Include the React library -->
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <!-- Include Babel so we can transpile JSX -->
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+</head>
+
+<body>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        let heading = "Getting Started with React and JSX";
+
+        ReactDOM.render(
+            <h1 style={{color: 'salmon'}}>{heading}</h1>,
+            document.getElementById("root")
+        );
+    </script>
+</body>
+
+</html>
