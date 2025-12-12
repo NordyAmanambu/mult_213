@@ -1,0 +1,9 @@
+.empty-state {
+    background-color: orange;
+}
+
+#todo-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}

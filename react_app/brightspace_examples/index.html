@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Add React to a Website</title>
+    <!-- Include the React library -->
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+</head>
+
+<body>
+
+    <div id="root"></div>
+
+    <script>
+        // React Core logic
+        let heading = React.createElement(
+            "h1",
+            { style: { color: "salmon" } },
+            "Getting Started with React"
+        );
+
+        // Website (HTML) specific React logic
+        ReactDOM.render(
+            heading,
+            document.getElementById("root")
+        );
+    </script>
+</body>
+
+</html>
